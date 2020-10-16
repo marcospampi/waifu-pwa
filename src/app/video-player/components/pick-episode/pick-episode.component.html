@@ -1,0 +1,5 @@
+<cdk-virtual-scroll-viewport [itemSize]="48" class="scroll-trick">
+  <button style="min-height: 48px;" mat-flat-button *cdkVirtualFor="let episode of data" fxLayout="row" (click)="select(episode)" >
+    <mat-icon style="margin-right: 8px;">play_circle_outline</mat-icon> <span>{{episode.title}}</span>
+  </button>
+</cdk-virtual-scroll-viewport>

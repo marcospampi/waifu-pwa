@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-secure": "ng serve --ssl --ssl-key ../../localhost-cert/server.key --ssl-cert ../../localhost-cert/server.crt",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -12,25 +13,39 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~10.1.5",
+    "@angular/cdk": "^10.2.4",
     "@angular/common": "~10.1.5",
     "@angular/compiler": "~10.1.5",
     "@angular/core": "~10.1.5",
+    "@angular/flex-layout": "^10.0.0-beta.32",
     "@angular/forms": "~10.1.5",
+    "@angular/material": "^10.2.4",
     "@angular/platform-browser": "~10.1.5",
     "@angular/platform-browser-dynamic": "~10.1.5",
     "@angular/router": "~10.1.5",
-    "rxjs": "~6.6.0",
+    "@angular/service-worker": "~10.1.5",
+    "@capacitor/android": "^2.4.2",
+    "@capacitor/angular": "^1.0.3",
+    "@capacitor/core": "latest",
+    "cordova-plugin-screen-orientation": "^3.0.2",
+    "es6-promise-plugin": "^4.2.2",
+    "pouchdb-adapter-idb": "^7.2.2",
+    "rxdb": "^9.6.0",
+    "rxjs": "^6.6.3",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1001.6",
     "@angular/cli": "~10.1.6",
     "@angular/compiler-cli": "~10.1.5",
-    "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
+    "@types/uuid": "^8.3.0",
     "codelyzer": "^6.0.0",
+    "electron": "^10.1.3",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
@@ -41,6 +56,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.0.2"
+    "typescript": "~4.0.2",
+    "@capacitor/cli": "latest"
   }
 }

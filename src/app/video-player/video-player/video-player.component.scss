@@ -1,0 +1,61 @@
+$full-width: 100%;
+$full-height: 100%;
+$font-color: white;
+$background-color: black;
+
+:host, .overlay, video, .fullscreen {
+  color: $font-color;
+  position: fixed;
+  top:0;
+  left: 0;
+  width: $full-width;
+  height: $full-height;
+  min-width: $full-width;
+  max-width: $full-width;
+  min-height: $full-height;
+  max-height: $full-height;
+  user-select: none;
+}
+video {
+  background-color: $background-color;
+}
+.overlay{
+  background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.22172619047619047) 0%, rgba(0,0,0,1) 100%);
+
+}
+.bottom {
+  padding: 1em;
+}
+
+::ng-deep .mat-icon.videop{
+  user-select: none;
+  font-size: 4em;
+  height: auto !important;
+  width: auto  !important;
+  text-shadow: 1px 2px 3px #666;
+  cursor: pointer;
+  &.huge {
+    font-size: 6em;
+
+  }
+  &.disabled {
+    cursor: default;
+    color: #999;
+  }
+  @media screen and ( max-width: 640px) {
+    &.huge {
+      font-size: 4em;
+    }
+    font-size: 3em;
+  }
+}
+// fake
+.toggles-overlay {}
+
+h1,h2,h3,h4,h5 {
+  padding: 0;;
+}
+.glassy-toolbar{
+  background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.22172619047619047) 0%, rgba(0,0,0,1) 100%);
+
+}

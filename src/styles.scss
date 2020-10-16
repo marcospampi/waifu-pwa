@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-accent, .mat-fab.mat-accent {
+  background-color: #69f0ae !important;
+}
+.mat-fucking-as-i-want {
+  .mat-list-item-content {
+    flex-direction: column;
+  }
+}
+
+.sticky-toolbar {
+  position: fixed !important;
+  top:0;
+  z-index: 10000;
+}

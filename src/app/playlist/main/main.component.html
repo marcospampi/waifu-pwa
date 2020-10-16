@@ -1,0 +1,50 @@
+<mat-toolbar></mat-toolbar>
+<mat-toolbar class="sticky-toolbar" color="primary">
+  <span>Waifu</span>
+</mat-toolbar>
+<mat-list fxLayoutGap="1em">
+  <ng-container *ngFor="let elem of (list$|async)">
+    <mat-list-item fxLayout="column" style="height: auto;margin: 1em 0">
+      <mat-card  style="height: auto;width:100%;margin-top: 1em">
+        <mat-card-header>
+          <img mat-card-avatar [src]="elem.image" alt="">
+          <mat-card-title>{{elem.title}}</mat-card-title>
+        </mat-card-header>
+        <div class="cover-image" [ngStyle]="{
+          backgroundImage: 'url('+elem.cover+')'
+        }"></div>
+        <mat-card-content>
+          <p>{{elem.description}}</p>
+        </mat-card-content>
+        <mat-card-actions fxLayoutAlign="end center">
+          <button [routerLink]="['/','watch',elem.uuid]" matTooltip="Resume" mat-icon-button><mat-icon>play_circle_outline</mat-icon></button>
+          <button [matMenuTriggerFor]="optionsMenu" [matMenuTriggerData]="{playlist:elem}" matTooltip="Options" mat-icon-button> <mat-icon>more_vert</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-list-item>
+  </ng-container>
+</mat-list>
+<div style="display: block;min-height: 8em;"></div>
+
+<mat-menu #optionsMenu="matMenu">
+  <ng-template matMenuContent let-playlist="playlist">
+    <button (click)="exportPlaylist(playlist)" mat-menu-item> <mat-icon>publish</mat-icon> <span>Export playlist</span> </button>
+    <button [routerLink]="['/','home','editor',playlist.uuid]" mat-menu-item><mat-icon>edit</mat-icon><span>Edit</span></button>
+    <button (click)="deletePlaylist(playlist)" mat-menu-item color="warn" ><mat-icon>delete</mat-icon><span>Delete</span></button>
+  </ng-template>
+</mat-menu>
+
+<ng-container>
+  <button mat-fab [matMenuTriggerFor]="addMenu" [ngStyle]="{
+    'position': 'fixed',
+    'right': '2em',
+    'bottom': '2em'
+    }" >
+    <mat-icon >add</mat-icon>
+  </button>
+  <mat-menu #addMenu="matMenu">
+    <button mat-menu-item [routerLink]="['/','home','editor']"> <mat-icon>playlist_add</mat-icon> <span>New playlist</span> </button>
+    <button (click)="fileImportTrick.click()" mat-menu-item> <mat-icon>unarchive</mat-icon> <span>Import playlist</span> </button>
+    <input fxHide #fileImportTrick type="file" (input)="importPlaylist($event)" accept="application/json">
+  </mat-menu>
+</ng-container>

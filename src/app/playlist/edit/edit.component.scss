@@ -1,0 +1,7 @@
+.deep-fat-input {
+  ::ng-deep {
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+}

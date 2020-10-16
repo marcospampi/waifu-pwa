@@ -1,0 +1,14 @@
+{
+  "appId": "io.spampi.waifu",
+  "appName": "Waifu",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist/waifu-pwa",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {},
+  "linuxAndroidStudioPath": "/home/marco/.local/share/android-studio/bin/studio.sh"
+}

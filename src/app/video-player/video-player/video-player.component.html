@@ -1,0 +1,68 @@
+<div class="full-screen" #fullScreenElement>
+  <video class="toggles-overlay" [src]="current_episode ? current_episode.url : null" #nativeVideoPlayer preload="auto" autoplay="true" 
+    (click)="toggleVisibility($event)">
+    <source #nativeSource >
+  </video>
+  <div class="toggles-overlay" [@fadeControls]="menuVisibility" (click)="toggleVisibility($event)">
+    <div class="overlay toggles-overlay" gdAreas=" top top top | center-l center-m center-r | bottom bottom bottom"
+      gdColumns="35% 30% 35%" gdRows.lt-md="30% 40% 30%" gdRows.gt-sm="25% 50% 25%">
+      <div class="toggles-overlay top" gdArea="top" fxLayout="column" fxLayoutGap="2em"  fxLayoutAlign="start">
+        <mat-toolbar class="glassy-toolbar">
+          <button [routerLink]="['/']" mat-icon-button><mat-icon>arrow_back</mat-icon></button>
+          <ng-container *ngIf="playlist">
+            <h3>{{playlist.title}}</h3>
+            <div style="min-width: 24px;text-align: center;">-</div>
+            <h4>{{current_episode.title}}</h4>
+            <div style="flex:1 1 0"></div>
+
+            <button (click)="showPlaylist()" mat-icon-button><mat-icon>playlist_play</mat-icon></button>
+          </ng-container>
+        </mat-toolbar>
+        
+      </div>
+      <div class="toggles-overlay center center-l" gdArea="center-l" fxLayout="row"
+        fxLayoutAlign="center center" fxLayoutGap="1em">
+        <mat-icon 
+          [class.disabled]="!previous_episode" 
+          class="videop"
+          (click)="setEpisode(previous_episode)"
+        >skip_previous</mat-icon>
+        <mat-icon class="videop" (click)="time = time - 10">replay_10</mat-icon>
+      </div>
+      <div class="toggles-overlay center center-m"  gdArea="center-m" fxLayout="row"
+        fxLayoutAlign="center center" fxLayoutGap="1em">
+        <mat-icon class="videop huge" (click)="playing = !playing">{{!(playing$|async) ? 'play_arrow' : 'pause'}}
+        </mat-icon>
+      </div>
+      <div class="toggles-overlay center center-r"  gdArea="center-r" fxLayout="row"
+        fxLayoutAlign="center center" fxLayoutGap="1em">
+        <mat-icon class="videop" (click)="time = time + 10">forward_10</mat-icon>
+        <mat-icon 
+          [class.disabled]="!next_episode" 
+          class="videop"
+          (click)="setEpisode(next_episode)"
+        >skip_next</mat-icon>
+      </div>
+
+      <!-- here goes the panels -->
+      <div class="toggles-overlay bottom" gdArea="bottom" fxLayout="column" fxLayoutAlign="center center"
+        >
+        <div fxLayout="row" fxLayoutAlign="start center" [ngStyle]="{width:'100%'}" fxLayoutGap="1em">
+          <span style="font-weight: 550;">{{(time$|async)|time}}</span>
+          <span>/</span>
+          <span style="font-weight: 550;">{{duration|time}}</span>
+          <div [ngStyle]="{width:'100%'}"></div>
+          <button mat-icon-button (click)="volume = volume > 0 ? 0 : 1">
+            <mat-icon>{{(volume$|async) > 0 ? 'volume_up': 'volume_off'}}</mat-icon>
+          </button>
+          <button mat-icon-button (click)="toggleFullscreen()">
+            <mat-icon >{{(fullscreen$|async) == false ? 'fullscreen' : 'fullscreen_exit'}}</mat-icon>
+          </button>
+        </div>
+
+        <mat-slider  color="primary" (change)="onChangeTime($event)" [ngStyle]="{width:'100%'}" [value]="time$|async"
+          min="0" [max]="duration"></mat-slider>
+      </div>
+    </div>
+  </div>
+</div>

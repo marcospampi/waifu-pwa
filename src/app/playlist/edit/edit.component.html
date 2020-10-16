@@ -1,0 +1,88 @@
+<mat-toolbar></mat-toolbar>
+<mat-toolbar class="sticky-toolbar" color="primary">
+  <button mat-icon-button [routerLink]="['/']">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>{{ form ? form.value.title : ''}}</span>
+  <div style="flex: 1 1 0"></div>
+  <button mat-icon-button (click)="savePlaylist()">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-toolbar>
+<ng-container *ngIf="form">
+  <div  fxLayout="column" [ngStyle]="{padding: '.5em 0'}" fxLayoutGap="1em">
+    <form  class="deep-fat-input" [formGroup]="form"
+      fxLayout="column" fxLayoutGap="1em">
+      <mat-list fxLayout="column" fxLayoutGap="1em">
+        <mat-list-item>
+          <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" type="text" required>
+          </mat-form-field>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" type="text"></textarea>
+          </mat-form-field>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-form-field>
+            <mat-label>Alternative id</mat-label>
+            <input matInput type="text" formControlName="alternative_id">
+          </mat-form-field>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-form-field>
+            <mat-label>Image URL</mat-label>
+            <input matInput type="text" formControlName="image">
+          </mat-form-field>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-form-field>
+            <mat-label>Cover image URL</mat-label>
+            <input matInput type="text" formControlName="cover">
+          </mat-form-field>
+        </mat-list-item>
+      </mat-list>
+      <br>
+      <div style="padding: 0 16px" fxLayout="column" fxLayoutGap=".5em">
+        <h2>Episodes ({{episodes_length}})</h2>
+        <mat-accordion multi="true">
+          <ng-container *ngFor="let episode of episodes.controls; trackBy: episodeTrackBy; let $i = index">
+          <mat-expansion-panel *ngIf="!episode.value.removed" [formGroup]="episode">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{episode.value.title}}
+            </mat-panel-title>
+            <mat-panel-description>
+              
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <mat-form-field>
+                <mat-label>Title</mat-label>
+                <input matInput type="text" formControlName="title">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Url</mat-label>
+                <input matInput type="text" formControlName="url">
+              </mat-form-field>
+              <mat-action-row>
+                <button mat-icon-button color="warn" (click)="removeEpisode($event,$i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-action-row>
+            </ng-template>
+          </mat-expansion-panel>
+        </ng-container>
+        </mat-accordion>
+        <button mat-flat-button color="accent" (click)="addEpisode($event)">
+          <mat-icon>add</mat-icon>
+          <span>Add episode </span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+</ng-container>
