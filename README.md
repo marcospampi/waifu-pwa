@@ -33,3 +33,7 @@ Append this down on webservice under  onFetch callback
  if( req.url.match(/(\.mp4)$|(\.webm)$|(\.mkv)$/ugi))
      return;
 ```
+
+## Sample playlist
+
+[This is a sample playlist](https://gist.github.com/marcospampi/3bec49ee46712ee8aa4da9b0b4491e90) with three awesome short movies made by the Blender Project
