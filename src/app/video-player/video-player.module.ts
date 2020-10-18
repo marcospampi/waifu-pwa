@@ -9,13 +9,14 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { TimePipe } from './time.pipe';
 import { DoubleClickDirective } from './directives/double-click.directive';
 import { PickEpisodeComponent } from './components/pick-episode/pick-episode.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatListModule } from '@angular/material/list';
 
 const routes: Routes = [
   {path: ':uuid', component: VideoPlayerComponent}
@@ -32,7 +33,7 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatBottomSheetModule,
-    MatListModule,
+    MatProgressBarModule,
     ScrollingModule
   ]
 })

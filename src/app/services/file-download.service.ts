@@ -16,4 +16,30 @@ export class FileDownloadService {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   }
+  async shareJsonFile(json: any, name: string, title: string, description?: string ): Promise<boolean> {
+    
+    if ( !('canShare' in navigator)) {
+      throw new Error("No share available");
+    }
+    
+    let files: Array<File> = [
+      new File([JSON.stringify(json)],name + ".json")
+    ];
+    Object.freeze(files);
+
+    try {
+      // ugly tricks
+      await (navigator as any).share({
+        title: title,
+        text: description,
+        files: files 
+      } as any);
+      return true;
+    }
+    catch(e) {
+      throw e;
+    }
+
+
+  }
 }

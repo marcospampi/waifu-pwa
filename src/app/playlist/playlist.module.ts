@@ -15,6 +15,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 import { EditComponent } from './edit/edit.component';
@@ -58,9 +59,10 @@ const routes: Routes = [
     MatExpansionModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatBottomSheetModule,
     ReactiveFormsModule,
     FormsModule,
-    MatBottomSheetModule,
     FlexLayoutModule
   ],
   entryComponents: [

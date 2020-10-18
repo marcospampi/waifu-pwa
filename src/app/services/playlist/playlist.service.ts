@@ -79,7 +79,7 @@ export class PlaylistService {
     if( !PlaylistService.keepAliveSubscriptions)
     PlaylistService.keepAliveSubscriptions = [
       PlaylistService.db$.subscribe({error: console.error}),
-      PlaylistService.collections$.subscribe({error: console.error, next: console.info})
+      PlaylistService.collections$.subscribe({error: console.error})
     ]
     
   }

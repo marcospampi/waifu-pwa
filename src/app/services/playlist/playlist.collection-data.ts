@@ -63,14 +63,20 @@ export const COLLECTIONS_HOOKS: {[k:string]: Partial<{[K in keyof RxCollection]:
         data.title = (data.number + 1).toString();
       data.last_seen = 0;
       data.last_update  =( Date.now()/1000)|0;
+
       delete data.removed;
     },
     preSave: function( data: any, doc: RxDocument ) {
-      data.last_seen = (data.last_seen.getTime()/1000)|0;
-      data.last_update  = (data.last_update.getTime()/1000)|0;
+
+      data.last_seen = (Date.now()/1000)|0;
+
+      if ( data.last_update instanceof Date )
+        data.last_update  = (data.last_update.getTime()/1000)|0;
+      
       delete data.removed;
     },
     postCreate: function( data: Episode ) {
+
       data.last_seen = new Date((data.last_seen as any) * 1000);
       data.last_update = new Date((data.last_update as any) * 1000);
     }

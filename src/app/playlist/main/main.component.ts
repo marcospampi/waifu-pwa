@@ -47,7 +47,7 @@ export class MainComponent implements OnInit {
     )
   }
 
-  exportPlaylist(__playlist: Playlist) {
+  sharePlaylist(__playlist: Playlist) {
 
     this.playlist_service.getPlaylist(__playlist.uuid).subscribe(
       _playlist => {
@@ -66,7 +66,18 @@ export class MainComponent implements OnInit {
           .match(/[a-z0-9]+/gi)
           .map(e => e.toLocaleLowerCase())
           .join('-');
-        this.fileDownload.downloadJsonFile(playlist,download_name)
+
+        this.fileDownload.shareJsonFile(
+          playlist,download_name,playlist.title,playlist.description
+        ).catch(
+          error => this.fileDownload.downloadJsonFile(
+            playlist,
+            download_name
+          )
+        )
+
+        
+          
       }
     )
     
