@@ -8,37 +8,35 @@ export class FileDownloadService {
   constructor() { }
 
   downloadJsonFile(json: any, name: string) {
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(json));
+
+    let blob = new Blob([JSON.stringify(json)]);
+    let url = URL.createObjectURL(blob);
+    //var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(json));
     var downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("href",     url);
     downloadAnchorNode.setAttribute("download", name + ".json");
     document.body.appendChild(downloadAnchorNode); // required for firefox
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
+    URL.revokeObjectURL(url);
   }
-  async shareJsonFile(json: any, name: string, title: string, description?: string ): Promise<boolean> {
-    
-    if ( !('canShare' in navigator)) {
-      throw new Error("No share available");
-    }
-    
-    let files: Array<File> = [
-      new File([JSON.stringify(json)],name + ".json")
-    ];
-    Object.freeze(files);
+  async shareJsonFile(json: any, name: string, title: string, description?: string ): Promise<any> {
+    const $canShare = (data): boolean => (navigator as any).canShare(data);
+    const $share = (data): Promise<any> =>  (navigator as any).share(data);
 
-    try {
-      // ugly tricks
-      await (navigator as any).share({
+    const file = new File([JSON.stringify(json)],name + ".json",{type: 'application/json'})
+
+    if ($canShare({files: [file]})){
+      return await $share({
         title: title,
         text: description,
-        files: files 
-      } as any);
-      return true;
+        files: [file] 
+      });
     }
-    catch(e) {
-      throw e;
+    else {
+      return null;
     }
+
 
 
   }

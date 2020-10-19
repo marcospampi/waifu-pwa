@@ -123,8 +123,9 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   ) { }
   ngOnDestroy(): void {
     screen.orientation.unlock();
-    for ( let i of this._garbage )
-      i.unsubscribe();
+    document.exitFullscreen().catch(err => void 0);
+    for ( let garbage of this._garbage )
+      garbage.unsubscribe();
   }
 
 

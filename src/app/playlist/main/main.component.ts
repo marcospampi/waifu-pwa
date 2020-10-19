@@ -67,14 +67,20 @@ export class MainComponent implements OnInit {
           .map(e => e.toLocaleLowerCase())
           .join('-');
 
-        this.fileDownload.shareJsonFile(
-          playlist,download_name,playlist.title,playlist.description
-        ).catch(
-          error => this.fileDownload.downloadJsonFile(
+        if ( 'share' in navigator ) {
+          //console.log('share')
+          this.fileDownload.shareJsonFile(playlist,download_name,playlist.title,playlist.description)
+            .catch( (error: DOMException) => {
+              console.error({share_error: error});
+              
+            });
+        }
+        else {
+          this.fileDownload.downloadJsonFile(
             playlist,
             download_name
-          )
-        )
+          );
+        }
 
         
           
