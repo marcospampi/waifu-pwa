@@ -9,7 +9,7 @@ export class FileDownloadService {
 
   downloadJsonFile(json: any, name: string) {
 
-    let blob = new Blob([JSON.stringify(json)]);
+    let blob = new Blob([JSON.stringify(json,null,2)]);
     let url = URL.createObjectURL(blob);
     //var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(json));
     var downloadAnchorNode = document.createElement('a');
@@ -24,7 +24,7 @@ export class FileDownloadService {
     const $canShare = (data): boolean => (navigator as any).canShare(data);
     const $share = (data): Promise<any> =>  (navigator as any).share(data);
 
-    const file = new File([JSON.stringify(json)],name + ".json",{type: 'application/json'})
+    const file = new File([JSON.stringify(json,null,2)],name + ".json.txt",{type: 'text/plain'})
 
     if ($canShare({files: [file]})){
       return await $share({

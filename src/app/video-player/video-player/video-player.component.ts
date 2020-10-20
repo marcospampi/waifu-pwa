@@ -7,6 +7,7 @@ import { Playlist } from '@services/playlist/playlist-header.type';
 import { Episode } from '@services/playlist/playlist-item.type';
 import { PlaylistService } from '@services/playlist/playlist.service';
 import { PickEpisodeComponent, PickEpisodeData } from '@video-player/components/pick-episode/pick-episode.component';
+import { pid } from 'process';
 import { RxDocument } from 'rxdb';
 import { fromEvent, Observable ,merge, from, of, Subscription, Subject, forkJoin} from 'rxjs';
 import {debounceTime, filter, map, mapTo, share, take, tap, throttleTime} from 'rxjs/operators'
@@ -97,11 +98,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     this.canplay$.pipe(
       take(1)
     ).subscribe(
-      e => {
-        let ep = this.current_episode;
-        if ( ep && ep.time && ep.time > 0 )
-          this.time = ep.time;
-      }
+      e => this.resumeVideo.bind(this)
     )
   }
   
@@ -202,19 +199,27 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         });
         this.canplay$.pipe(
           throttleTime(100),
-          take(1)
+          take(1),
         ).subscribe(
-          () => {
-            if ( this.current_episode.time > 0 )
-              this.time = this.current_episode.time;
-          } 
+          this.resumeVideo.bind(this)
         )
           
       }
     )
   }
+  /**
+   * @description Resumes video if span < time < duration - span
 
-  
+   */
+  private resumeVideo(event: Event) {
+    const span: number = 60;
+    const episode = this.current_episode;
+    if ( episode.time > span && episode.time < this.duration - span ) {
+      this.time = episode.time;
+    }
+    
+  }
+
   private setupEvents( tag: HTMLVideoElement ) {
     const event$ = <K extends keyof HTMLMediaElementEventMap>(event: K) => fromEvent(tag,event);
 

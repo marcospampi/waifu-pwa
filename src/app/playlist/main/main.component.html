@@ -61,6 +61,6 @@
   <mat-menu #addMenu="matMenu">
     <button mat-menu-item [routerLink]="['/','home','editor']"> <mat-icon>playlist_add</mat-icon> <span>New playlist</span> </button>
     <button (click)="fileImportTrick.click()" mat-menu-item> <mat-icon>unarchive</mat-icon> <span>Import playlist</span> </button>
-    <input fxHide #fileImportTrick type="file" (input)="importPlaylist($event)" accept="application/json">
+    <input fxHide #fileImportTrick type="file" (input)="importPlaylist($event)" accept="application/json,.json.txt">
   </mat-menu>
 </ng-container>

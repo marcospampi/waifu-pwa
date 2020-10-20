@@ -1,7 +1,7 @@
 {
   "name": "waifu-pwa",
   "short_name": "waifu-pwa",
-  "theme_color": "#C2185B",
+  "theme_color": "#880e4f",
   "background_color": "#303030",
   "display": "fullscreen",
   "scope": "./",
