@@ -20,6 +20,6 @@
       "@video-player/*": ["src/app/video-player/*"],
       "@playlist/*": ["src/app/playlist/*"],
       "@services/*": ["src/app/services/*"]
-    }
+    },
   }
 }

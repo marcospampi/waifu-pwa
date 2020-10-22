@@ -12,11 +12,26 @@
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 </head>
 <body class="mat-typography mat-app-background">
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
+  <!--<script>
+    window['__onGCastApiAvailable'] = function( isAvailable ) {
+      if (isAvailable) {
+        cast.framework.CastContext.getInstance().setOptions({
+          receiverApplicationId:
+            chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
+        });
+        window.dispatchEvent(
+          new Event('chromecast_enabled')
+        );
+      }
+    }
+
     
+  </script>
+  <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+  -->
 </body>
 </html>

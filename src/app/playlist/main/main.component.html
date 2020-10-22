@@ -1,10 +1,18 @@
 <mat-toolbar class=" mat-elevation-z4"></mat-toolbar>
-<mat-toolbar class="sticky-toolbar mat-elevation-z4" color="primary">
-  <span>Waifu</span>
+<mat-toolbar class="sticky-toolbar mat-elevation-z4" color="primary" fxLayout="row">
+  <span [fxFlex]="'nogrow'" >Waifu</span>
+  <div [fxFlex]="100"></div>
+  <button *ngIf="mediaBroadcaster.remoteDeviceEnabled" [fxFlex]="'nogrow'" mat-icon-button (click)="castLauncher.click()">
+    <mat-icon
+      [style.color]="mediaBroadcaster.remoteDeviceConnected ? 'lightblue':'white'"
+    >{{mediaBroadcaster.remoteDeviceConnected ? 'cast_connected':'cast'}}</mat-icon>
+    <google-cast-launcher style="display: none !important;" #castLauncher></google-cast-launcher>
+  </button>
+  
 </mat-toolbar>
   <ng-container *ngIf="(list$|async) as list;else loadingTemplate">
     <mat-list fxLayoutGap="1em">
-  
+
       <ng-container *ngFor="let elem of list">
         <mat-list-item fxLayout="column" style="height: auto;margin: 1em 0">
           <mat-card style="height: auto;width:100%;margin-top: 1em">
@@ -61,6 +69,6 @@
   <mat-menu #addMenu="matMenu">
     <button mat-menu-item [routerLink]="['/','home','editor']"> <mat-icon>playlist_add</mat-icon> <span>New playlist</span> </button>
     <button (click)="fileImportTrick.click()" mat-menu-item> <mat-icon>unarchive</mat-icon> <span>Import playlist</span> </button>
-    <input fxHide #fileImportTrick type="file" (input)="importPlaylist($event)" accept="application/json,.json.txt">
+    <input fxHide #fileImportTrick type="file" (input)="importPlaylist($event)" accept="application/json,text/plain">
   </mat-menu>
 </ng-container>

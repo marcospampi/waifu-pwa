@@ -3,6 +3,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteRequestComponent } from '@playlist/components/delete-request/delete-request.component';
 import { FileDownloadService } from '@services/file-download.service';
+import { MediaBroadcasterService } from '@services/media-broadcaster/media-broadcaster.service';
 import { Playlist, WaifuPlaylist } from '@services/playlist/playlist-header.type';
 import { PlaylistService } from '@services/playlist/playlist.service';
 import { RxDocument } from 'rxdb';
@@ -21,6 +22,7 @@ export class MainComponent implements OnInit {
     private bottom_sheet: MatBottomSheet,
     private snackbar: MatSnackBar,
     private fileDownload: FileDownloadService,
+    public mediaBroadcaster: MediaBroadcasterService
     ) {
     
   }

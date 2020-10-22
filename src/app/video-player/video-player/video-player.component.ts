@@ -3,6 +3,8 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSliderChange } from '@angular/material/slider';
 import { ActivatedRoute, ParamMap, Routes } from '@angular/router';
+import { VideoDevice } from '@services/media-broadcaster/devices/video-device.class';
+import { MediaBroadcasterService } from '@services/media-broadcaster/media-broadcaster.service';
 import { Playlist } from '@services/playlist/playlist-header.type';
 import { Episode } from '@services/playlist/playlist-item.type';
 import { PlaylistService } from '@services/playlist/playlist.service';
@@ -40,13 +42,14 @@ import {debounceTime, filter, map, mapTo, share, take, tap, throttleTime} from '
 })
 export class VideoPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('nativeVideoPlayer',{static: true}) _videoElement: ElementRef<HTMLVideoElement>;
-  @ViewChild('nativeSource',{static: true}) _nativeSource: ElementRef<HTMLSourceElement>;
-  @ViewChild('fullScreenElement',{static: true}) _fullScreenElement: ElementRef<HTMLDivElement>;
 
-  private _garbage: Subscription[] = [];
+  public device?: VideoDevice;
+  public device$: Observable<VideoDevice>;
+
+  private $garbage: Subscription[] = [];
   private _playlist: RxDocument<Playlist<RxDocument<Episode>>>;
 
-  public canplay$: Observable<Event>;
+  public ready$: Observable<boolean>;
 
   public get playlist(): RxDocument<Playlist<RxDocument<Episode>>>|null {
     return this._playlist;
@@ -94,12 +97,15 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
         last_seen: new Date
       }
     });
+    
 
-    this.canplay$.pipe(
-      take(1)
+    this.ready$.pipe(
+      throttleTime(100),
+      take(1),
     ).subscribe(
-      e => this.resumeVideo.bind(this)
+      this.resumeVideo.bind(this)
     )
+    this.device.source = episode.url;
   }
   
   private get fullscrenElement(): HTMLDivElement {
@@ -108,36 +114,52 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private get video(): HTMLVideoElement {
     return this._videoElement.nativeElement;
   }
-  private get source(): HTMLSourceElement {
-    return this._nativeSource.nativeElement;
-  }
+
 
   menuVisibility: boolean = true;
   constructor(
     private activatedRoute: ActivatedRoute,
     private playlist_service: PlaylistService,
-    private bottomSheet: MatBottomSheet
+    private bottomSheet: MatBottomSheet,
+    private broadcaster: MediaBroadcasterService
   ) { }
   ngOnDestroy(): void {
+    this.broadcaster.disposeVideoElementDevice();
+
     screen.orientation.unlock();
     document.exitFullscreen().catch(err => void 0);
-    for ( let garbage of this._garbage )
+    for ( let garbage of this.$garbage )
       garbage.unsubscribe();
   }
 
 
   ngOnInit(): void {
-    this.setupEvents(this.video);
-    this.activatedRoute.paramMap.subscribe(this.onParams.bind(this));
 
-    this.setupGarbage();
+    this.broadcaster.registerVideoElementDevice( this.video );
+    this.device$ = this.broadcaster.device$.pipe(share());
+    this.$garbage.push(
+      this.device$.subscribe(
+        device => {
+          this.device = device;
+          console.log(device)
+          this.setupEvents();
+          this.setupGarbage()
+        }
+      )
+    )
+
+    //this.setupGarbage();
+    //this.setupEvents(this.video);
+    this.activatedRoute.paramMap.subscribe(this.onParams.bind(this));
+    //
+    //this.setupGarbage();
     
   }
 
   // events subscriptio is garbage, it has to be removed on ngOnDestroy, so keep it here
   public setupGarbage() {
     // makes UI visible after touched
-    this._garbage.push(merge(
+    this.$garbage.push(merge(
       this.visibility$.pipe(map(e => ({ v: e }))),
       this.playing$.pipe(map(e => ({ p: e })))
     ).pipe(
@@ -153,9 +175,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     );
     
     // updates video time
-    this._garbage.push(
+    this.$garbage.push(
       this.time$.pipe(
-        throttleTime(5000)
+        throttleTime(5000),
+        //tap(console.info)
       ).subscribe(
         time => {
           let episode = this.current_episode;
@@ -171,8 +194,8 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     );
 
     // go to next episode if current ended
-    this._garbage.push(
-      this.videoEnded$.subscribe(
+    this.$garbage.push(
+      this.ended$.subscribe(
         event => {
           this.setEpisode(this.next_episode);
         }
@@ -192,18 +215,20 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
             last_seen: new Date
           }
         });
+        this.device.source = this.current_episode.url;
         this.current_episode.update({
           $set: {
             last_seen: new Date
           }
         });
-        this.canplay$.pipe(
+        
+        this.ready$.pipe(
           throttleTime(100),
           take(1),
         ).subscribe(
           this.resumeVideo.bind(this)
         )
-          
+        
       }
     )
   }
@@ -214,34 +239,20 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private resumeVideo(event: Event) {
     const span: number = 60;
     const episode = this.current_episode;
+    console.log(episode.time)
     if ( episode.time > span && episode.time < this.duration - span ) {
       this.time = episode.time;
     }
     
   }
 
-  private setupEvents( tag: HTMLVideoElement ) {
-    const event$ = <K extends keyof HTMLMediaElementEventMap>(event: K) => fromEvent(tag,event);
+  private setupEvents( device: VideoDevice = this.device ) {
 
-    this.time$ = event$('timeupdate').pipe(
-      map(event => (event.target as HTMLVideoElement).currentTime)
-    ).pipe(
-      share()
-    );
-    this.playing$ = merge(
-      event$('play').pipe(mapTo(true)),
-      event$('pause').pipe(mapTo(false)),
-      of(!tag.paused)
-    ).pipe(
-      share()
-    );
-    this.volume$ = merge(
-      event$('volumechange'),
-      of(this.volume)
-      ).pipe(
-        map( event => this.volume),
-        share()
-    );
+    this.time$ = this.device.time$;
+    this.playing$ = this.device.playing$;
+    this.volume$ = this.device.volume$;
+    this.ended$ = this.device.ended$;
+    this.ready$ = this.device.ready$;
 
     this.fullscreen$ = merge(
       fromEvent(this.fullscrenElement,'fullscreenchange').pipe(
@@ -252,41 +263,29 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       share()
     );
 
-    this.videoEnded$ = event$('ended').pipe(
-      share()
-    );
-
-
-    this.canplay$ = event$("canplay").pipe(
-      share()
-    )
   }
 
   public playing$: Observable<boolean>;
   public set playing(value: boolean) {
-    if( value ) {
-      this.video.play();
+      this.device.playing = value;
       //this._resumeEventSubscrtiption = setTimeout( () => this.menuVisibility = false , 4000)
-    }
-    else
-      //if ( this._resumeEventSubscrtiption )
-      //  clearTimeout(this._resumeEventSubscrtiption);
-      this.video.pause();
+    
+
   }
   public get playing() {
-    return !this.video.paused;
+    return this.device.playing;
   }
 
   public get duration(): number {
-    return this.video.duration;
+    return this.device.duration;
   }
 
   public time$: Observable<number>;
   public get time(): number{
-    return this.video.currentTime;
+    return this.device.time;
   }
   public set time(v: number) {
-    this.video.currentTime = v;
+    this.device.time = v;
   }
 
   public onChangeTime(t: MatSliderChange) {
@@ -295,10 +294,10 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   public volume$: Observable<number>
   public get volume() {
-    return this.video.volume;
+    return this.device.volume;
   }
   public set volume(value: number) {
-    this.video.volume = value;
+    this.device.volume = value;
   } 
   public visibility$: Subject<boolean> = new Subject;
   public toggleVisibility( event: Event ) {
@@ -334,7 +333,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       this.current_episode = episode;
   }
 
-  public videoEnded$: Observable<Event>;
+  public ended$: Observable<boolean>;
 
   public showPlaylist() {
     type RxEpisode = RxDocument<Episode>;

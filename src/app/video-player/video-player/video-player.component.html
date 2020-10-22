@@ -1,5 +1,5 @@
 <div class="full-screen" #fullScreenElement>
-  <video class="toggles-overlay" [src]="current_episode ? current_episode.url : null" #nativeVideoPlayer preload="auto" autoplay="true" 
+  <video class="toggles-overlay"  #nativeVideoPlayer preload="auto" autoplay="true" 
     (click)="toggleVisibility($event)">
     <source #nativeSource >
   </video>
@@ -7,15 +7,12 @@
     <div class="overlay toggles-overlay " gdAreas=" top top top | center-l center-m center-r | bottom bottom bottom"
       gdColumns="35% 30% 35%" gdRows.lt-md="30% 40% 30%" gdRows.gt-sm="25% 50% 25%">
       <div class="toggles-overlay top" gdArea="top" fxLayout="column" fxLayoutGap="2em"  fxLayoutAlign="start">
-        <mat-toolbar class="glassy-toolbar">
-          <button [routerLink]="['/']" mat-icon-button><mat-icon>arrow_back</mat-icon></button>
+        <mat-toolbar class="glassy-toolbar" fxLayout="row">
+          <button [fxFlex]="'nogrow'" [routerLink]="['/']" mat-icon-button><mat-icon>arrow_back</mat-icon></button>
           <ng-container *ngIf="playlist">
-            <h3>{{playlist.title}}</h3>
-            <div style="min-width: 24px;text-align: center;">-</div>
-            <h4>{{current_episode.title}}</h4>
-            <div style="flex:1 1 0"></div>
+            <h3 [fxFlex]="100" style="overflow: hidden; text-overflow: ellipsis;">{{playlist.title}} - {{current_episode.title}}</h3>
 
-            <button (click)="showPlaylist()" mat-icon-button><mat-icon>playlist_play</mat-icon></button>
+            <button [fxFlex]="'nogrow'" (click)="showPlaylist()" mat-icon-button><mat-icon>playlist_play</mat-icon></button>
           </ng-container>
         </mat-toolbar>
         
@@ -52,6 +49,7 @@
           <span>/</span>
           <span style="font-weight: 550;">{{duration|time}}</span>
           <div [ngStyle]="{width:'100%'}"></div>
+
           <button mat-icon-button (click)="volume = volume > 0 ? 0 : 1">
             <mat-icon>{{(volume$|async) > 0 ? 'volume_up': 'volume_off'}}</mat-icon>
           </button>

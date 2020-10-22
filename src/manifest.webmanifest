@@ -3,7 +3,7 @@
   "short_name": "waifu-pwa",
   "theme_color": "#880e4f",
   "background_color": "#303030",
-  "display": "fullscreen",
+  "display": "standalone",
   "scope": "./",
   "start_url": "./",
   "icons": [
