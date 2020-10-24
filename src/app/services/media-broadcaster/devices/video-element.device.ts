@@ -1,4 +1,4 @@
-import { BehaviorSubject, EMPTY, fromEvent, merge, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, fromEvent, merge, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, mapTo, share } from 'rxjs/operators';
 import { VideoDevice } from './video-device.class';
 
@@ -18,13 +18,19 @@ export class VideoElementDevice implements VideoDevice {
 
   public playing$: Observable<boolean>;
   public get playing(): boolean { return !this._videoElement.paused }
+  public set playing(v: boolean) { 
+    if ( v )
+      this._videoElement.play();
+    else
+      this._videoElement.pause() 
+  }
 
   public time$: Observable<number>;
   public get time(): number { return this._videoElement.currentTime; }
   public set time( t: number ) { this._videoElement.currentTime = t; }
 
   public ended$: Observable<boolean>;
-  public get ended(): boolean {return this._videoElement.ended }
+  public get ended(): boolean { return this._videoElement.ended }
 
   public ready$: Observable<boolean>;
   public get ready(): boolean { return !!this._videoElement.readyState } 
@@ -98,9 +104,13 @@ export class VideoElementDevice implements VideoDevice {
       share()
     );
 
-    this.volume$ = this.$.pipe(
-      filter( e => e.type == 'volumechange'),
-      map( e => this.volume ),
+    this.volume$ = merge(
+        of(1),
+        this.$.pipe(
+          filter( e => e.type == 'volumechange'),
+          map( e => this.volume ),
+        )
+      ).pipe(
       share()
     )
 

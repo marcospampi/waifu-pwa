@@ -1,6 +1,6 @@
 /// <reference types="chromecast-caf-sender" />
 
-import { BehaviorSubject, EMPTY, fromEvent, merge, Observable, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, fromEvent, merge, Observable, of, pipe, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, mapTo, retry, share, take, tap } from 'rxjs/operators';
 import { VideoDevice } from './video-device.class';
 
@@ -127,10 +127,13 @@ export class ChromecastDevice implements VideoDevice {
     );
 
     
-    this.volume$ = this.$.pipe(
-      filter( e => e.type == cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED),
-      map( e => this.volume ),
-      share()
+    this.volume$ = merge(
+      of(1),
+      this.$.pipe(
+        filter( e => e.type == cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED),
+        map( e => this.volume ),
+        share()
+      )
     )
     
 

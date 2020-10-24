@@ -1,10 +1,10 @@
 {
   "name": "waifu-pwa",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "serve:secure": "ng serve --ssl --ssl-key ../../localhost-cert/localnet.key --ssl-cert ../../localhost-cert/localnet.crt --host 0.0.0.0",
+    "serve:dev":"ng serve --disable-host-check --base-href /angular.dev/",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
