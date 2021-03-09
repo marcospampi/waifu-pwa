@@ -1,60 +1,66 @@
 <mat-toolbar class=" mat-elevation-z4"></mat-toolbar>
 <mat-toolbar class="sticky-toolbar mat-elevation-z4" color="primary" fxLayout="row">
-  <span [fxFlex]="'nogrow'" >Waifu</span>
+  <span [fxFlex]="'nogrow'">Waifu</span>
   <div [fxFlex]="100"></div>
-  <button *ngIf="mediaBroadcaster.remoteDeviceEnabled" [fxFlex]="'nogrow'" mat-icon-button (click)="castLauncher.click()">
-    <mat-icon
-      [style.color]="mediaBroadcaster.remoteDeviceConnected ? 'lightblue':'white'"
-    >{{mediaBroadcaster.remoteDeviceConnected ? 'cast_connected':'cast'}}</mat-icon>
+  <button *ngIf="mediaBroadcaster.remoteDeviceEnabled" [fxFlex]="'nogrow'" mat-icon-button
+    (click)="castLauncher.click()">
+    <mat-icon [style.color]="mediaBroadcaster.remoteDeviceConnected ? 'lightblue':'white'">
+      {{mediaBroadcaster.remoteDeviceConnected ? 'cast_connected':'cast'}}</mat-icon>
     <google-cast-launcher style="display: none !important;" #castLauncher></google-cast-launcher>
   </button>
-  
-</mat-toolbar>
-  <ng-container *ngIf="(list$|async) as list;else loadingTemplate">
-    <mat-list fxLayoutGap="1em">
 
-      <ng-container *ngFor="let elem of list">
-        <mat-list-item fxLayout="column" style="height: auto;margin: 1em 0">
-          <mat-card style="height: auto;width:100%;margin-top: 1em">
-            <mat-card-header [routerLink]="['/','watch',elem.uuid]"> 
-              <img mat-card-avatar [src]="elem.image" alt="">
-              <mat-card-title>{{elem.title}}</mat-card-title>
-              <mat-card-subtitle>{{elem.alternative_id}}</mat-card-subtitle>
-            </mat-card-header>
-            <div class="cover-image" [ngStyle]="{
+</mat-toolbar>
+<ng-container *ngIf="(list$|async) as list;else loadingTemplate">
+  <mat-list [ngClass.lt-md]="['packed']" fxLayoutGap="1em">
+
+    <ng-container *ngFor="let elem of list">
+      <mat-list-item fxLayout="column" style="height: auto;margin: 1em 0">
+        <mat-card  style="height: auto;width:100%;margin-top: 1em">
+          <mat-card-header [routerLink]="['/','watch',elem.uuid]">
+            <img mat-card-avatar [src]="elem.image" alt="">
+            <mat-card-title>{{elem.title}}</mat-card-title>
+            <mat-card-subtitle>{{elem.alternative_id}}</mat-card-subtitle>
+          </mat-card-header>
+          <div class="cover-image" [ngStyle]="{
               backgroundImage: 'url('+elem.cover+')'
             }" [routerLink]="['/','watch',elem.uuid]"></div>
-            <mat-card-content [routerLink]="['/','watch',elem.uuid]">
-              <p>{{elem.description}}</p>
-            </mat-card-content>
-            <mat-card-actions fxLayoutAlign="end center">
-              <button [routerLink]="['/','watch',elem.uuid]" matTooltip="Resume" mat-icon-button>
-                <mat-icon>play_circle_outline</mat-icon>
-              </button>
-              <button [matMenuTriggerFor]="optionsMenu" [matMenuTriggerData]="{playlist:elem}" matTooltip="Options"
-                mat-icon-button>
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </mat-card-actions>
-          </mat-card>
-        </mat-list-item>
-      </ng-container>
-    </mat-list>
-  </ng-container>
-  <ng-template #loadingTemplate>
-    <div class="overlay" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1em">
-      <mat-spinner color="accent"></mat-spinner>
-      <h2>Loading playlists...</h2>
-    </div>
-  </ng-template>
+          <mat-card-content [routerLink]="['/','watch',elem.uuid]">
+            <p>{{elem.description}}</p>
+          </mat-card-content>
+          <mat-card-actions fxLayoutAlign="end center">
+            <button [routerLink]="['/','watch',elem.uuid]" matTooltip="Resume" mat-icon-button>
+              <mat-icon>play_circle_outline</mat-icon>
+            </button>
+            <button [matMenuTriggerFor]="optionsMenu" [matMenuTriggerData]="{playlist:elem}" matTooltip="Options"
+              mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-list-item>
+    </ng-container>
+  </mat-list>
+</ng-container>
+<ng-template #loadingTemplate>
+  <div class="overlay" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1em">
+    <mat-spinner color="accent"></mat-spinner>
+    <h2>Loading playlists...</h2>
+  </div>
+</ng-template>
 
 <div style="display: block;min-height: 8em;"></div>
 
 <mat-menu #optionsMenu="matMenu">
   <ng-template matMenuContent let-playlist="playlist">
-    <button (click)="sharePlaylist(playlist)" mat-menu-item> <mat-icon>publish</mat-icon> <span>Share</span> </button>
-    <button [routerLink]="['/','home','editor',playlist.uuid]" mat-menu-item><mat-icon>edit</mat-icon><span>Edit</span></button>
-    <button (click)="deletePlaylist(playlist)" mat-menu-item color="warn" class="mega-ultra-warn" ><mat-icon>delete</mat-icon><span>Delete</span></button>
+    <button (click)="sharePlaylist(playlist)" mat-menu-item>
+      <mat-icon>publish</mat-icon> <span>Share</span>
+    </button>
+    <button [routerLink]="['/','home','editor',playlist.uuid]" mat-menu-item>
+      <mat-icon>edit</mat-icon><span>Edit</span>
+    </button>
+    <button (click)="deletePlaylist(playlist)" mat-menu-item color="warn" class="mega-ultra-warn">
+      <mat-icon>delete</mat-icon><span>Delete</span>
+    </button>
   </ng-template>
 </mat-menu>
 
@@ -63,12 +69,16 @@
     'position': 'fixed',
     'right': '2em',
     'bottom': '2em'
-    }" >
-    <mat-icon >add</mat-icon>
+    }">
+    <mat-icon>add</mat-icon>
   </button>
   <mat-menu #addMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/','home','editor']"> <mat-icon>playlist_add</mat-icon> <span>New playlist</span> </button>
-    <button (click)="fileImportTrick.click()" mat-menu-item> <mat-icon>unarchive</mat-icon> <span>Import playlist</span> </button>
+    <button mat-menu-item [routerLink]="['/','home','editor']">
+      <mat-icon>playlist_add</mat-icon> <span>New playlist</span>
+    </button>
+    <button (click)="fileImportTrick.click()" mat-menu-item>
+      <mat-icon>unarchive</mat-icon> <span>Import playlist</span>
+    </button>
     <input fxHide #fileImportTrick type="file" (input)="importPlaylist($event)" accept="application/json,text/plain">
   </mat-menu>
 </ng-container>
