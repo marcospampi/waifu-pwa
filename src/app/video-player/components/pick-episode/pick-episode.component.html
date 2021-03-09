@@ -7,7 +7,7 @@
         <span fxFlex="1">{{episode.title}}</span>
       </div>
     </div>
-    <mat-progress-bar mode="determinate" [value]="episode.duration ? (episode.time / episode.duration)*100 : 0 "></mat-progress-bar>
+    <mat-progress-bar [fxHide]="episode.duration <= 0" mode="determinate" [value]="episode.duration ? (episode.time / episode.duration)*100 : 0 "></mat-progress-bar>
 
 
   </button>

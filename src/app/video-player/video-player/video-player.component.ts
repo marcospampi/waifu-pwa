@@ -93,16 +93,18 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   }
 
   public set current_episode(episode: RxDocument<Episode>) {
-    this.playlist.update({
+    /*this.playlist.update({
       $set: {
         last_seen_episode: episode.number
       }
     });
-    episode.update({
+    episode.atomi({
       $set: {
         last_seen: new Date
       }
-    });
+    });*/
+    this.playlist.atomicSet('last_seen_episode', episode.number);
+    episode.atomicSet('last_seen', new Date);
     
 
     this.ready$.pipe(
@@ -127,7 +129,7 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private playlist_service: PlaylistService,
     private bottomSheet: MatBottomSheet,
-    private broadcaster: MediaBroadcasterService
+    private broadcaster: MediaBroadcasterService,
   ) { }
   ngOnDestroy(): void {
     this.broadcaster.disposeVideoElementDevice();
@@ -147,7 +149,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       this.device$.subscribe(
         device => {
           this.device = device;
-          console.log(device)
           this.setupEvents();
           this.setupGarbage()
         }
@@ -183,17 +184,18 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     // updates video time
     this.$garbage.push(
       this.time$.pipe(
-        throttleTime(5000),
+        throttleTime(10000),
         //tap(console.info)
       ).subscribe(
         time => {
           let episode = this.current_episode;
-          if (episode) {
+          if ( episode && time > 0 ) {/*
             episode.update({
               $set: {
                 time: Math.round(time)
               }
-            })
+            })*/
+            episode.atomicSet('time', Math.round(time))
           }
         }
       )
@@ -216,17 +218,19 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     this.playlist_service.getPlaylist(playlist_uuid).subscribe(
       playlist => {
         this._playlist = playlist;
-        playlist.update({
-          $set: {
-            last_seen: new Date
-          }
-        });
+        playlist.atomicSet('last_seen', new Date);
+        //playlist.update({
+        //  $set: {
+        //    last_seen: new Date
+        //  }
+        //});
         this.device.source = this.current_episode.url;
-        this.current_episode.update({
-          $set: {
-            last_seen: new Date
-          }
-        });
+        this.current_episode.atomicSet('last_seen', new Date);
+        //this.current_episode.update({
+        //  $set: {
+        //    last_seen: new Date
+        //  }
+        //});
         
         this.ready$.pipe(
           throttleTime(100),
@@ -272,7 +276,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       filter( event => event == true )
     ).subscribe(
       event => {
-        console.log(this.current_episode.duration)
         if ( this.current_episode.duration != this.duration ) {
           this.current_episode.atomicSet('duration', this.duration | 0 );
         }
@@ -375,4 +378,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     
 
   }
+
+
 }

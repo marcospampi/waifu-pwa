@@ -103,7 +103,7 @@ export class VideoElementDevice implements VideoDevice {
       mapTo(true)
     );
     this.ready$ = merge(ready$,loading$).pipe( share() );
-    this.ready$.subscribe(ready => console.info({ready}));
+    //this.ready$.subscribe(ready => console.info({ready}));
     
 
     this.duration$ = this.ready$.pipe(

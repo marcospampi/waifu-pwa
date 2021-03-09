@@ -9,7 +9,7 @@ import { Plugins } from '@capacitor/core';
 })
 export class AppComponent  implements OnInit {
   constructor(
-    private playlist_service: PlaylistService
+    private playlist_service: PlaylistService,
   ){}
   ngOnInit(): void {
 

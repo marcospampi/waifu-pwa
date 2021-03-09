@@ -7,7 +7,7 @@ export interface WaifuEpisode {
 }
 
 export interface Episode extends WaifuEpisode{
-  uuid?: number;
+  uuid?: string;
   title: string;
   number: number;
   url: string;

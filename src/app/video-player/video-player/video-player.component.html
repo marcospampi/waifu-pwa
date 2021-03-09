@@ -53,7 +53,7 @@
           <span>/</span>
           <span style="font-weight: 550;">{{duration|time}}</span>
           <div [ngStyle]="{width:'100%'}"></div>
-          
+
           <button mat-icon-button (click)="volume = volume > 0 ? 0 : 1">
             <mat-icon>{{(volume$|async) > 0 ? 'volume_up': 'volume_off'}}</mat-icon>
           </button>

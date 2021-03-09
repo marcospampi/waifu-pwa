@@ -78,7 +78,6 @@ export class MediaBroadcasterService {
   }
 
   private onChromecastEvent(event: cast.framework.SessionStateEventData ) {
-    console.log(event)
     if (  event.sessionState == cast.framework.SessionState.SESSION_STARTED || 
           event.sessionState == cast.framework.SessionState.SESSION_RESUMED ) {
         

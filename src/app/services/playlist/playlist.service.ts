@@ -77,11 +77,10 @@ export class PlaylistService {
   }
   constructor() {
     if( !PlaylistService.keepAliveSubscriptions)
-    PlaylistService.keepAliveSubscriptions = [
-      PlaylistService.db$.subscribe({error: console.error}),
-      PlaylistService.collections$.subscribe({error: console.error})
-    ]
-    
+      PlaylistService.keepAliveSubscriptions = [
+        PlaylistService.db$.subscribe({error: console.error}),
+        PlaylistService.collections$.subscribe({error: console.error})
+      ];
   }
 
   public getPlaylists(q?: {titleLike?: string, hidden?: boolean}): Observable<Playlist[]> {
