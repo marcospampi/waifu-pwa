@@ -1,5 +1,5 @@
 import { BehaviorSubject, EMPTY, fromEvent, merge, Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, map, mapTo, share } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, mapTo, share, tap } from 'rxjs/operators';
 import { VideoDevice } from './video-device.class';
 
 export class VideoElementDevice implements VideoDevice {
@@ -93,12 +93,19 @@ export class VideoElementDevice implements VideoDevice {
       share()
     );
 
-    this.ready$ = this.$.pipe(
-      filter(event => event.type == 'canplay'),
-      mapTo(true),
-      share()
+    let loading$ = this.$.pipe(
+      filter( event => event.type == 'waiting'|| event.type == 'seeking' || event.type == 'stalled' || event.type == 'sourcechanged'),
+      mapTo(false)
+    )
+
+    let ready$ = this.$.pipe(
+      filter(event => event.type == 'canplay' ),
+      mapTo(true)
     );
+    this.ready$ = merge(ready$,loading$).pipe( share() );
+    this.ready$.subscribe(ready => console.info({ready}));
     
+
     this.duration$ = this.ready$.pipe(
       map( () => this._videoElement.duration),
       share()

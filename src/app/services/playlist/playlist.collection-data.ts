@@ -1,6 +1,6 @@
 import { RxCollection, RxCollectionCreator, RxDocument } from 'rxdb';
 import { Playlist, PLAYLIST_HEADER_SCHEMA } from './playlist-header.type';
-import { Episode, PLAYLIST_ITEM_SCHEMA } from './playlist-item.type';
+import { Episode, PLAYLIST_ITEM_SCHEMA, PLAYLIST_ITEM_SCHEMA_MIGRATION } from './playlist-item.type';
 import { v4 } from 'uuid';
 
 export const COLLECTION_NAMES = {
@@ -20,9 +20,7 @@ export const COLLECTIONS: {[k: string]: RxCollectionCreator} = {
   [COLLECTION_NAMES.playlist_items]: {
     name: 'playlist_items',
     schema: PLAYLIST_ITEM_SCHEMA,
-    migrationStrategies: {
-      1: doc => doc
-    }
+    migrationStrategies: PLAYLIST_ITEM_SCHEMA_MIGRATION
   }
 }
 

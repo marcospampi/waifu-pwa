@@ -16,3 +16,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   top:0;
   z-index: 10000;
 }
+
+.mat-spinner.white circle {
+  stroke: #fff;
+  }

@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { TimePipe } from './time.pipe';
 import { DoubleClickDirective } from './directives/double-click.directive';
@@ -34,6 +35,7 @@ const routes: Routes = [
     MatIconModule,
     MatBottomSheetModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     ScrollingModule
   ]
 })

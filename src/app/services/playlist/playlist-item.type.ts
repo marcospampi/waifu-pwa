@@ -15,12 +15,14 @@ export interface Episode extends WaifuEpisode{
   last_update?: Date;
   last_seen?: Date;
   time?: number;
+  duration?: number;
+  downloaded?:false;
 }
 
 export const PLAYLIST_ITEM_SCHEMA: RxJsonSchema<Episode> = {
   title: "playlist-headers",
   description: "playlist headers",
-  version: 1,
+  version: 2,
 
   type: 'object',
   properties: { 
@@ -54,6 +56,14 @@ export const PLAYLIST_ITEM_SCHEMA: RxJsonSchema<Episode> = {
     time: {
       type: 'integer',
       default: 0
+    },
+    duration: {
+      type: 'integer',
+      default: 0
+    },
+    downloaded: {
+      type: 'boolean',
+      default: false
     }
   },
   required: ['uuid', 'playlist_uuid','number','url', 'last_seen',],
@@ -61,5 +71,13 @@ export const PLAYLIST_ITEM_SCHEMA: RxJsonSchema<Episode> = {
 
   attachments: {
     encrypted: false
+  }
+}
+export const PLAYLIST_ITEM_SCHEMA_MIGRATION = {
+  1 : elem => elem,
+  2: (elem: Episode) => {
+    elem.downloaded = false;
+    elem.duration = 0;
+    return elem;
   }
 }

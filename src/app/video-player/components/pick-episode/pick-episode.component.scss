@@ -1,5 +1,17 @@
+$accent: #69f0ae;
 :host{
   min-height: 256px;
+  ::ng-deep {
+    .mat-progress-bar-buffer {
+      background-color: #ffffff33;
+    }
+    mat-progress-bar > svg {
+      display: none;
+    }
+    .mat-progress-bar .mat-progress-bar-fill::after {
+      background-color: $accent;
+    }
+  }
 }
 .scroll-trick {
   height: 256px;
@@ -11,5 +23,5 @@ button {
 }
 
 div.accent * {
-  color: #69f0ae !important;
+  color: $accent !important;
 }

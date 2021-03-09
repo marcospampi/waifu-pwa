@@ -47,6 +47,12 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   public device$: Observable<VideoDevice>;
 
   private $garbage: Subscription[] = [];
+  private set garbage( v: Subscription|Subscription[] ) {
+    if ( v instanceof Array )
+      this.$garbage.push(...v);
+    else
+      this.$garbage.push(v);
+  }
   private _playlist: RxDocument<Playlist<RxDocument<Episode>>>;
 
   public ready$: Observable<boolean>;
@@ -239,7 +245,6 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
   private resumeVideo(event: Event) {
     const span: number = 60;
     const episode = this.current_episode;
-    console.log(episode.time)
     if ( episode.time > span && episode.time < this.duration - span ) {
       this.time = episode.time;
     }
@@ -262,6 +267,17 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     ).pipe(
       share()
     );
+
+    this.garbage = this.ready$.pipe(
+      filter( event => event == true )
+    ).subscribe(
+      event => {
+        console.log(this.current_episode.duration)
+        if ( this.current_episode.duration != this.duration ) {
+          this.current_episode.atomicSet('duration', this.duration | 0 );
+        }
+      }
+    )
 
   }
 
