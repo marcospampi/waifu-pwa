@@ -22,11 +22,15 @@
   ::ng-deep * {
     outline: none;
   }
+  ::ng-deep .mat-card {
+    margin-top: 1em;
+  }
   ::ng-deep .packed {
     .mat-list-item-content {
       padding: 0  !important;
 
       .mat-card, mat-card {
+        margin-top: 0;
         padding: 1em 0 !important;
         border-radius: 0 !important;
         .mat-card-header {
@@ -41,6 +45,11 @@
           margin-bottom:  0px;
           padding: 0 1em;
         }
+        .cover-image{
+          margin: 1em 1em;
+          border-radius: 6px;
+        }
+        
       }
     }
   }

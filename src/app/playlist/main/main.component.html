@@ -15,7 +15,7 @@
 
     <ng-container *ngFor="let elem of list">
       <mat-list-item fxLayout="column" style="height: auto;margin: 1em 0">
-        <mat-card  style="height: auto;width:100%;margin-top: 1em">
+        <mat-card  style="height: auto;width:100%">
           <mat-card-header [routerLink]="['/','watch',elem.uuid]">
             <img mat-card-avatar [src]="elem.image" alt="">
             <mat-card-title>{{elem.title}}</mat-card-title>
