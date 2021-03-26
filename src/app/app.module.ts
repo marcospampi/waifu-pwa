@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlaylistService } from '@services/playlist/playlist.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { PlaylistModule } from '@playlist/playlist.module';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     MatSnackBarModule,
     BrowserAnimationsModule,
+    PlaylistModule
   ],
   providers: [
     PlaylistService

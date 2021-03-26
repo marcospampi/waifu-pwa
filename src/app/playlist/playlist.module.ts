@@ -23,7 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DeleteRequestComponent } from './components/delete-request/delete-request.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -36,10 +36,6 @@ const routes: Routes = [
   {
     path: 'editor',
     component: EditComponent
-  },
-  {
-    path: '**',
-    redirectTo: '/'
   }
 ]
 
@@ -67,6 +63,9 @@ const routes: Routes = [
   ],
   entryComponents: [
     DeleteRequestComponent
+  ],
+  exports: [
+    MainComponent, EditComponent, DeleteRequestComponent,RouterModule
   ]
 })
 export class PlaylistModule { }

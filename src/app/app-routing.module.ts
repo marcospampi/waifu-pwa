@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { routes as PlaylistModuleRoutes } from '@playlist/playlist.module';
 
 const routes: Routes = [
-  {
-    path: 'home', 
-    loadChildren: () => import('@playlist/playlist.module').then(m => m.PlaylistModule)
-  },
+  ...PlaylistModuleRoutes,
+  
   {
     path: 'watch',
     loadChildren: () => import('@video-player/video-player.module').then(m => m.VideoPlayerModule)

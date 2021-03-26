@@ -55,7 +55,7 @@
     <button (click)="sharePlaylist(playlist)" mat-menu-item>
       <mat-icon>publish</mat-icon> <span>Share</span>
     </button>
-    <button [routerLink]="['/','home','editor',playlist.uuid]" mat-menu-item>
+    <button [routerLink]="['/','editor',playlist.uuid]" mat-menu-item>
       <mat-icon>edit</mat-icon><span>Edit</span>
     </button>
     <button (click)="deletePlaylist(playlist)" mat-menu-item color="warn" class="mega-ultra-warn">
@@ -73,7 +73,7 @@
     <mat-icon>add</mat-icon>
   </button>
   <mat-menu #addMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/','home','editor']">
+    <button mat-menu-item [routerLink]="['/','editor']">
       <mat-icon>playlist_add</mat-icon> <span>New playlist</span>
     </button>
     <button (click)="fileImportTrick.click()" mat-menu-item>
