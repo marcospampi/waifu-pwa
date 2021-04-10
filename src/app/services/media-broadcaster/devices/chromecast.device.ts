@@ -4,6 +4,27 @@ import { BehaviorSubject, EMPTY, fromEvent, merge, Observable, of, pipe, Subject
 import { distinctUntilChanged, filter, map, mapTo, retry, share, take, tap } from 'rxjs/operators';
 import { VideoDevice } from './video-device.class';
 
+const constants = {
+  mime_regexp: /\.((?<mp4>(mp4|m4a|m4p|m4b|m4r|m4v|mkv))|(?<hls>(m3u8|m3u))|(?<webm>(webm)))$/,
+  mime_map: {
+    mp4: 'video/mp4',
+    webm: 'video/webm',
+    hls: 'application/vnd.apple.mpegurl'
+  }
+}
+
+function getMimeFor( url: string ) {
+  let match = constants.mime_regexp.exec( url )
+  if ( match && match.groups ) {
+    const matchedEntry = Object.entries(match.groups).find( ([key, value]) => value != null );
+    if ( matchedEntry ) {
+      let key = matchedEntry[0];
+      return constants.mime_map[key];
+    }
+  }
+  throw `Invalid source: ${url}`;
+}
+
 export class ChromecastDevice implements VideoDevice {
 
   private player: cast.framework.RemotePlayer;
@@ -142,8 +163,25 @@ export class ChromecastDevice implements VideoDevice {
     this._events$.complete();
     this._source$.complete();
   }
-  onSourceChange(source: string) {
-    let mime = 'video' + source.match(/(webm)$|(mp4)$|(mkv)$/uig)[0];
+  onSourceChange( source: string ) {
+    try {
+      let mime = getMimeFor( source );
+      this._onSourceChange( source, mime );
+    }
+    catch( error ) {
+      console.error(error);
+      if ( typeof(error) == 'string') {
+        
+        alert(error);
+      }
+      else if ( error instanceof Error ) {
+        alert(error.message)
+      }
+      
+    }
+    
+  }
+  _onSourceChange(source: string, mime: string) {
     let mediaInfo = new chrome.cast.media.MediaInfo(
       source, mime
     );

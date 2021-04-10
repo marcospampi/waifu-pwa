@@ -10,6 +10,9 @@ Waifu is far from being perfect, indeed it's swear friendly, especially while st
 - Chrome Cast support ( Chrome and Chromium only )
 - Mobile friendly interface
 - Installable, yet not much of use, it works offline, but sadly I didn't have much success in prefetching selectively, so real usage offline.
+- **HLS** should work, as far the source playlist's conform and the http request returns its correct mimetype... and of course browser must support, too lazy do add hls.js right now. Needs testing for chromecast devices, works on chrome for Android.
+- _Scraper friendly_
+
 ## Sample playlist
 
 [This is a sample playlist](https://gist.github.com/marcospampi/3bec49ee46712ee8aa4da9b0b4491e90) with three awesome short movies made by the Blender Project
@@ -18,7 +21,7 @@ Waifu is far from being perfect, indeed it's swear friendly, especially while st
 If you build this project, be sure to append this in ngsw-worker.js under  onFetch() callback once built, sadly, angular service worker is ridiculously hard to configure, and by default prefetches even kebabs, and we do not want kebabs.
 
 ```js
- if( req.url.match(/(\.mp4)$|(\.webm)$|(\.mkv)$/ugi))
+ if( req.url.match(/\.(mp4|m4a|m4p|m4b|m4r|m4v|mkv|m3u8|m3u|webm)$/))
      return;
 ```
 
