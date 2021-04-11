@@ -1,19 +1,60 @@
+import Hls, { Level } from 'hls.js';
 import { BehaviorSubject, EMPTY, fromEvent, merge, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, mapTo, share, tap } from 'rxjs/operators';
 import { VideoDevice } from './video-device.class';
 
 export class VideoElementDevice implements VideoDevice {
   private _source$: BehaviorSubject<string> = new BehaviorSubject(null);
-  
+  private hls: Hls;
   public $: Observable<Event>;
 
   public source$: Observable<string>;
+
+
+  private set _source( src: string ) {
+    if ( this.hls ){
+      this.hls.detachMedia();
+      this.hls.destroy();
+      this.hls = null;
+    }
+
+    if ( src.match(/\.(m3u8)$/)) {
+      this.hls = new Hls;
+      
+      this.hls.loadSource( src );
+      this.hls.attachMedia( this._videoElement );
+      this.hls.once(Hls.Events.FRAG_LOADED, event => {
+        this.hls.currentLevel = this.hls.levels.length - 1;
+      })
+      
+    }
+    else {
+      this._videoElement.src = src;
+    }
+  }
+
   public set source(src: string){
-    this._videoElement.src = src;
+    // this._videoElement.src = src;
+    this._source = src;
     this._source$.next(src);
   }
+
   public get source(): string {
     return this._videoElement.src;
+  }
+
+  
+  public levels$: BehaviorSubject<Level[]> = new BehaviorSubject([]);
+
+  public get level() {
+    if ( this.hls ) {
+      return this.hls.currentLevel;
+    }
+    return -1;
+  }
+  public set level(value: number) {
+    if ( this.hls )
+      this.hls.currentLevel = value;
   }
 
   public playing$: Observable<boolean>;
@@ -123,6 +164,7 @@ export class VideoElementDevice implements VideoDevice {
 
     this.connected$ = EMPTY;
     this.disconnected$ = EMPTY;
+    
     
   }
 }

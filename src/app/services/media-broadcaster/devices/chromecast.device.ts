@@ -27,6 +27,8 @@ function getMimeFor( url: string ) {
 
 export class ChromecastDevice implements VideoDevice {
 
+
+
   private player: cast.framework.RemotePlayer;
   private playerController: cast.framework.RemotePlayerController;
 

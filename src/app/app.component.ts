@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistService } from './services/playlist/playlist.service';
-import { Plugins } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',

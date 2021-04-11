@@ -1,8 +1,13 @@
+import Hls, { Level } from 'hls.js';
 import { Observable } from 'rxjs';
 
 export interface VideoDevice {
   source$: Observable<string>;
   source: string;
+
+  levels$?: Observable<Level[]>
+  level$?: Observable<number>;
+  level?: number;
 
   playing$: Observable<boolean>;
   playing: boolean;

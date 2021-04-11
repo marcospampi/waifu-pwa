@@ -9,10 +9,11 @@ import { Playlist } from '@services/playlist/playlist-header.type';
 import { Episode } from '@services/playlist/playlist-item.type';
 import { PlaylistService } from '@services/playlist/playlist.service';
 import { PickEpisodeComponent, PickEpisodeData } from '@video-player/components/pick-episode/pick-episode.component';
+import { Level } from 'hls.js';
 import { pid } from 'process';
 import { RxDocument } from 'rxdb';
-import { fromEvent, Observable ,merge, from, of, Subscription, Subject, forkJoin} from 'rxjs';
-import {debounceTime, filter, map, mapTo, share, take, tap, throttleTime} from 'rxjs/operators'
+import { fromEvent, Observable ,merge, from, of, Subscription, Subject, forkJoin, EMPTY} from 'rxjs';
+import {debounceTime, filter, map, mapTo, share, switchMap, take, tap, throttleTime} from 'rxjs/operators'
 
 
 @Component({
@@ -145,10 +146,17 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
 
     this.broadcaster.registerVideoElementDevice( this.video );
     this.device$ = this.broadcaster.device$.pipe(share());
+    
+    
     this.$garbage.push(
       this.device$.subscribe(
         device => {
           this.device = device;
+          if ( device.levels$ ) {
+            
+            this.levels$ = device.levels$;
+            
+          }
           this.setupEvents();
           this.setupGarbage()
         }
@@ -160,6 +168,9 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
     this.activatedRoute.paramMap.subscribe(this.onParams.bind(this));
     //
     //this.setupGarbage();
+
+    
+
     
   }
 
@@ -282,7 +293,11 @@ export class VideoPlayerComponent implements OnInit, OnDestroy {
       }
     )
 
+    
+
   }
+
+  public levels$: Observable<Level[]>;
 
   public playing$: Observable<boolean>;
   public set playing(value: boolean) {
