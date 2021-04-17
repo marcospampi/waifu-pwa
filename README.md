@@ -21,7 +21,7 @@ Waifu is far from being perfect, indeed it's swear friendly, especially while st
 If you build this project, be sure to append this in ngsw-worker.js under  onFetch() callback once built, sadly, angular service worker is ridiculously hard to configure, and by default prefetches even kebabs, and we do not want kebabs.
 
 ```js
- if( req.url.match(/\.(mp4|m4a|m4p|m4b|m4r|m4v|mkv|m3u8|m3u|webm)$/))
+ if( req.url.match(/\.(mp4|m4a|m4p|m4b|m4r|m4v|mkv|m3u8|m3u|webm|ts)$/))
      return;
 ```
 

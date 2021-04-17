@@ -16,16 +16,22 @@ export class VideoElementDevice implements VideoDevice {
       this.hls.detachMedia();
       this.hls.destroy();
       this.hls = null;
+      window['hls'] = null;
     }
 
     if ( src.match(/\.(m3u8)$/)) {
-      this.hls = new Hls;
+      this.hls = new Hls({ autoStartLoad: true, maxBufferLength: 60*4 });
       
       this.hls.loadSource( src );
       this.hls.attachMedia( this._videoElement );
-      this.hls.once(Hls.Events.FRAG_LOADED, event => {
-        this.hls.currentLevel = this.hls.levels.length - 1;
-      })
+      //this.hls.once(Hls.Events.FRAG_LOADED, event => {
+      //  this.hls.currentLevel = -1 //this.hls.levels.length - 1;
+      //  
+      //});
+      this.hls.on(Hls.Events.FRAG_CHANGED, event => {
+        this.hls.nextLevel = this.hls.levels.length - 1;
+      });
+      window['hls'] = this.hls;
       
     }
     else {
